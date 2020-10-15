@@ -1,0 +1,32 @@
+html
+<div id="box">
+    <div id="float" class="div1">
+       	//随滚动移动的部分代码
+    </div>
+</div>
+
+css
+
+#box{float:left;position:relative;width:295px;}
+.div1{}
+.div2{position:fixed;_position:absolute;top:3px;z-index:295;}
+
+
+
+JavaScript
+
+(function(){
+    var oDiv=document.getElementById("float");
+    var H=0,iE6;
+    var Y=oDiv;
+    while(Y){H+=Y.offsetTop;Y=Y.offsetParent};
+    iE6=window.ActiveXObject&&!window.XMLHttpRequest;
+    if(!iE6){
+        window.οnscrοll=function()
+        {
+            var s=document.body.scrollTop||document.documentElement.scrollTop;
+            if(s>H){oDiv.className="div1 div2";if(iE6){oDiv.style.top=(s-H)+"px";}}
+            else{oDiv.className="div1";}    
+        };
+    }
+})();
