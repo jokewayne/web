@@ -1,0 +1,47 @@
+
+body{_background-image:none;     /*հҳΪ*/_background-attachment:fixed; }//这个是针对ie6的
+
+.navi{left:51%; margin-left:474px;top:120px;position:fixed;_position: absolute;_top: expression(documentElement.scrollTop + 120 + "px"); z-index:99;}
+
+.navi a{background-image: url(背景地址); background-repeat:no-repeat;;display: block;  width:119px;}
+
+.navi a1{background-position: 0px 0px;  height:30px;}
+
+.navi a2{background-position: 0px -30px;  height:30px;}
+
+<div class="navi" id="navi">
+
+<a href="" class="a1" ></a>
+
+<a href="" class="a2"></a>
+
+<script type='text/javascript'>
+
+(function(){
+
+var nav= document.getElementById('navi');
+
+var fnav= function(){
+
+ var top= document.documentElement.scrollTop||document.body.scrollTop;
+
+ if(top>500){
+
+  nav.style.display = 'block';
+
+  nav.style.marginTop="0px";
+
+ }else{
+
+ nav.style.marginTop="500"-top+"px";
+}
+
+}
+
+window.onload =window.onscroll = fnav;
+
+})();
+
+</script>
+
+</div>
