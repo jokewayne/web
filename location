@@ -1,0 +1,54 @@
+获取HTML元素的真正位置与大小（转）
+使用HTML元素的style.left,style.top,style.width,style.height以及width,height属性，都 不能获得元素的真正位置与大小，这些属性取出来的都是原来的设置值，例如<table  id="table1" width="500">，那么通过document.getElementById("table1").width取出来的值永远都是500， 而不管这个表格是否已经被撑大了；同时，通过document.getElementById("table1").style.left获得的值是空 的，因为没有设置这个值。
+要取得HTML元素的真正位置与大小，只能通过 offsetLeft,offsetTop,clientWidth,clientHeight,offsetWidth,offsetHeight属 性，其中offsetLeft与offsetTop分别是当前元素在父元素内的相对左坐标与相对顶坐标，要取得绝对坐标，还需要用到 offsetParent属性，改属性取得当前元素的父元素。要取得绝对坐标，就必须依次获得父元素的相对坐标，直到父元素为空，然后把所有相对坐标加起 来，得到当前元素的绝对坐标。
+最常见的是日期选择框，当点击按钮时弹出日期选择框总是在按钮的旁边，这个选择框的坐标，就是根据按钮的坐标以及按钮的offsetWidth,offsetHeight来取得的。
+
+-----------------------------------------------------------------------------------------------------------------------------
+HTMLElement.offsetLeft
+HTMLElement.offsetTop
+但 是需要注意的是，这两个属性所储存的数值并不是该元素相对整个浏览器画布的绝对位置，而是相对于其父元素位置的相对位置，也就是说这两个数值得到的是以其 父元素左上角为(0,0)点从而计算出的数值。那么如何得到一个HTML元素的绝对位置呢，前一阵找到的一个比较好的函数，分享一下：
+//获取元素的纵坐标
+function getTop(e){
+var offset=e.offsetTop;
+if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
+return offset;
+}
+//获取元素的横坐标
+function getLeft(e){
+var offset=e.offsetLeft;
+if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
+return offset;
+}
+其 原理就是利用HTMLElement.offsetParent属性，如果当前元素的父元素不是空（null），则在原本的offsetTop基础上加上 当前的offsetTop，然后继续获取父元素的父元素的offsetTop，再将其加之，最终递归出该元素相对于整个浏览器画布的纵坐标。横坐标亦 然。
+
+------------------------------------------------------------------------------------------------------------------------
+
+<script type="text/javascript">
+<!--
+function GetElCoordinate(e)
+{
+    var t = e.offsetTop;
+    var l = e.offsetLeft;
+    var w = e.offsetWidth;
+    var h = e.offsetHeight;
+    while (e = e.offsetParent)
+    {
+        t += e.offsetTop;
+        l += e.offsetLeft;
+    }
+    return {
+        top: t,
+        left: l,
+        width: w,
+        height: h,
+        bottom: t + h,
+        right: l + w
+    }
+}
+
+var o = GetElCoordinate(document.getElementById("text-div"));
+
+document.getElementById("test-div").style.left = parseInt(o.left)+"px";
+document.getElementById("test-div").style.top = parseInt(o.bottom)+"px";
+//-->
+</script>
